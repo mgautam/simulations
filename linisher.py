@@ -58,45 +58,47 @@ def Rect(y,angle):
     glPopMatrix()
 
 def get_y(angle):
+    d2r=3.14/180
+    r2d=180/3.14
     lw_radius = 1;#Linish Wheel radius
     length = 2
     lb2=length/2
     width = 0.4
     wb2=width/2
     sqrt_l2pw2 = 1.0198
-    vertex_radius = 1.01;#length/2,width/2 < vertex_radius < sqrt((l/2)^2+(w/2)^2)
-    latan = atan((lw_radius+lb2)/wb2)*180/3.14
-    watan = atan((lw_radius+wb2)/lb2)*180/3.14
-    lacos = acos(lb2/vertex_radius)*180/3.14
-    wacos = acos(wb2/vertex_radius)*180/3.14
-    latan2 = atan((lw_radius+lb2)/sqrt(vertex_radius*vertex_radius-lb2*lb2))
-    watan2 = atan((lw_radius+wb2)/sqrt(vertex_radius*vertex_radius-wb2*wb2))
-    if (angle > 0 and angle < (90-watan2)):
-        print("a")
-        y = (lw_radius+lb2) / sin((angle+90)*3.14/180)
-    elif (angle > lacos and angle < (90 - wacos)):
-        print("a1")
-        y = lw_radius+vertex_radius
-    elif (angle > latan2 and angle < (180 - latan2)):
-        print("b")
-        y = (lw_radius+wb2) / sin(angle * 3.14 / 180)
-    elif (angle > (90+wacos) and angle < (180 - lacos)):
-        print("b1")
-        y = lw_radius+vertex_radius
-    elif (angle > (90+watan2) and angle < (270 - watan2)):
-        print("c")
+    vr = .1;#0 < vr < length/2,width/2
+    latan = atan((lw_radius+lb2)/(wb2-vr))*r2d
+    watan = atan((lw_radius+wb2)/(lb2-vr))*r2d
+    if (angle > 0 and angle < (90-latan)):
+        print("0<a("+str(angle)+")<"+str(90-latan))
+        y = (lw_radius+lb2) / sin((angle+90)*d2r)
+    elif (angle > (90-latan) and angle < watan):
+        print(str(90-latan)+"<a1("+str(angle)+")<"+str(watan))
+        sa = 90*(angle - (90-latan))/(watan-(90-latan))
+        y = lw_radius+sqrt((wb2-vr+vr*cos(sa*d2r))**2+(lb2-vr+vr*sin(sa*d2r))**2)
+    elif (angle > watan and angle < (180 - watan)):
+        print(str(watan)+"<b("+str(angle)+")<"+str(180-watan))
+        y = (lw_radius+wb2) / sin(angle * d2r)
+    elif (angle > (180-watan) and angle < (90+latan)):
+        print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
+        sa = 90*(angle - (180-watan))/((90+latan)-(180-watan))
+        y = lw_radius+sqrt((lb2-vr+vr*cos(sa*d2r))**2+(wb2-vr+vr*sin(sa*d2r))**2)
+    elif (angle > (90+latan) and angle < (270 - latan)):
+        print(str(90+watan)+"<c("+str(angle)+")<"+str(270-latan))
         y = (lw_radius+lb2) / sin((angle-90) * 3.14 / 180)
-    elif (angle > (270-lacos) and angle < (360 - wacos)):
-        print("c1")
-        y = lw_radius+vertex_radius
-    elif (angle > (180+latan2) or angle < (360-latan2)):#360+wacos
-        print("d")
+    elif (angle > (270-latan) and angle < (180+watan)):
+        print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
+        sa = 90*(angle - (270-latan))/((180+watan)-(270-latan))
+        y = lw_radius+sqrt((wb2-vr+vr*cos(sa*d2r))**2+(lb2-vr+vr*sin(sa*d2r))**2)
+    elif (angle > (180+watan) and angle < (360-watan)):#360+wacos
+        print(str(180+watan)+"<d("+str(angle)+")<"+str(360-watan))
         y = (lw_radius+wb2) / sin((angle-180) * 3.14 / 180)
-    elif (angle > (wacos) and angle < (90 - lacos)):#360+wacos
-        print("d1")
-        y = lw_radius+vertex_radius
-    elif (angle > (270+watan2) and angle <= 360):
-        print("e")
+    elif (angle > (360-watan) and angle < (270+latan)):#360+wacos
+        print(str(360-watan)+"<d1("+str(angle)+")<"+str(270+latan))
+        sa = 90*(angle - (360-watan))/((270+latan)-(360-watan))
+        y = lw_radius+sqrt((lb2-vr+vr*cos(sa*d2r))**2+(wb2-vr+vr*sin(sa*d2r))**2)
+    elif (angle > (270+latan) and angle <= 360):
+        print(str(270+latan)+"<e("+str(angle)+")<360")
         y = (lw_radius+lb2) / sin((angle-270)*3.14/180)
     else:
         print("-")
@@ -122,7 +124,7 @@ def main():
 
     prev_pressed=False
     #zoom_position = -5
-    glTranslatef(0.0,0.0, -15.0)
+    glTranslatef(0.0,0.0, -5.0)
 
     glMatrixMode(GL_MODELVIEW)
 
