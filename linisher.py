@@ -67,19 +67,39 @@ def get_y(angle):
     vertex_radius = 1.01;#length/2,width/2 < vertex_radius < sqrt((l/2)^2+(w/2)^2)
     latan = atan((lw_radius+lb2)/wb2)*180/3.14
     watan = atan((lw_radius+wb2)/lb2)*180/3.14
-    if (angle > 0 and angle < (90 - latan)):
+    lacos = acos(lb2/vertex_radius)*180/3.14
+    wacos = acos(wb2/vertex_radius)*180/3.14
+    if (angle > 0 and angle < lacos):
+        #print("a")
         y = (lw_radius+lb2) / sin((angle+90)*3.14/180)
-    elif (angle > watan and angle < (180 - watan)):
+    elif (angle > lacos and angle < (90 - wacos)):
+        #print("a1")
+        y = lw_radius+vertex_radius
+    elif (angle > (90 - wacos) and angle < (90 + wacos)):
+        #print("b")
         y = (lw_radius+wb2) / sin(angle * 3.14 / 180)
-    elif (angle > (90+latan) and angle < (270 - latan)):
+    elif (angle > (90+wacos) and angle < (180 - lacos)):
+        #print("b1")
+        y = lw_radius+vertex_radius
+    elif (angle > (180-lacos) and angle < (270 - lacos)):
+        #print("c")
         y = (lw_radius+lb2) / sin((angle-90) * 3.14 / 180)
-    elif (angle > (180+watan) and angle < (360-watan)):
+    elif (angle > (270-lacos) and angle < (360 - wacos)):
+        #print("c1")
+        y = lw_radius+vertex_radius
+    elif (angle > (360-wacos) or angle < (wacos)):#360+wacos
+        #print("d")
         y = (lw_radius+wb2) / sin((angle-180) * 3.14 / 180)
-    elif (angle > (270+latan) and angle <= 360):
+    elif (angle > (wacos) and angle < (90 - lacos)):#360+wacos
+        #print("d1")
+        y = lw_radius+vertex_radius
+    elif (angle > (90-lacos) and angle <= 360):
+        #print("e")
         y = (lw_radius+lb2) / sin((angle-270)*3.14/180)
     else:
+        print("-")
         y = 0
-    return 1-y
+    return lw_radius-y
 
 def Line():
     glPushMatrix()
@@ -100,7 +120,7 @@ def main():
 
     prev_pressed=False
     #zoom_position = -5
-    glTranslatef(0.0,0.0, -5.0)
+    glTranslatef(0.0,0.0, -15.0)
 
     glMatrixMode(GL_MODELVIEW)
 
@@ -141,14 +161,15 @@ def main():
         Line()
         pygame.display.flip()
 
-        if (a > 0 and a < (90 - latan)):
-            pygame.time.wait(1000)
-        elif (a > (90+latan) and a < (270 - latan)):
-            pygame.time.wait(1000)
-        elif (a > (270+latan) and a <= 360):
-            pygame.time.wait(1000)
-        else:
-            pygame.time.wait(100)
+        #if (a > 0 and a < (90 - latan)):
+        #    pygame.time.wait(1000)
+        #elif (a > (90+latan) and a < (270 - latan)):
+        #    pygame.time.wait(1000)
+        #elif (a > (270+latan) and a <= 360):
+        #    pygame.time.wait(1000)
+        #else:
+        #    pygame.time.wait(100)
+        pygame.time.wait(1000)
 
 
 main()
