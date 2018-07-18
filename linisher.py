@@ -69,32 +69,34 @@ def get_y(angle):
     watan = atan((lw_radius+wb2)/lb2)*180/3.14
     lacos = acos(lb2/vertex_radius)*180/3.14
     wacos = acos(wb2/vertex_radius)*180/3.14
-    if (angle > 0 and angle < lacos):
-        #print("a")
+    latan2 = atan((lw_radius+lb2)/sqrt(vertex_radius*vertex_radius-lb2*lb2))
+    watan2 = atan((lw_radius+wb2)/sqrt(vertex_radius*vertex_radius-wb2*wb2))
+    if (angle > 0 and angle < (90-watan2)):
+        print("a")
         y = (lw_radius+lb2) / sin((angle+90)*3.14/180)
     elif (angle > lacos and angle < (90 - wacos)):
-        #print("a1")
+        print("a1")
         y = lw_radius+vertex_radius
-    elif (angle > (90 - wacos) and angle < (90 + wacos)):
-        #print("b")
+    elif (angle > latan2 and angle < (180 - latan2)):
+        print("b")
         y = (lw_radius+wb2) / sin(angle * 3.14 / 180)
     elif (angle > (90+wacos) and angle < (180 - lacos)):
-        #print("b1")
+        print("b1")
         y = lw_radius+vertex_radius
-    elif (angle > (180-lacos) and angle < (270 - lacos)):
-        #print("c")
+    elif (angle > (90+watan2) and angle < (270 - watan2)):
+        print("c")
         y = (lw_radius+lb2) / sin((angle-90) * 3.14 / 180)
     elif (angle > (270-lacos) and angle < (360 - wacos)):
-        #print("c1")
+        print("c1")
         y = lw_radius+vertex_radius
-    elif (angle > (360-wacos) or angle < (wacos)):#360+wacos
-        #print("d")
+    elif (angle > (180+latan2) or angle < (360-latan2)):#360+wacos
+        print("d")
         y = (lw_radius+wb2) / sin((angle-180) * 3.14 / 180)
     elif (angle > (wacos) and angle < (90 - lacos)):#360+wacos
-        #print("d1")
+        print("d1")
         y = lw_radius+vertex_radius
-    elif (angle > (90-lacos) and angle <= 360):
-        #print("e")
+    elif (angle > (270+watan2) and angle <= 360):
+        print("e")
         y = (lw_radius+lb2) / sin((angle-270)*3.14/180)
     else:
         print("-")
@@ -169,7 +171,7 @@ def main():
         #    pygame.time.wait(1000)
         #else:
         #    pygame.time.wait(100)
-        pygame.time.wait(1000)
+        pygame.time.wait(100)
 
 
 main()
