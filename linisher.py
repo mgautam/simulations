@@ -6,7 +6,20 @@ from OpenGL.GLU import *
 
 from math import *
 
-def cCircle(angle):
+d2r=3.14/180;r2d=180/3.14;
+lw_radius = 1;#Linish Wheel radius
+length = 2;lb2=length/2;
+width = 0.4;wb2=width/2;
+vr = .1;#0 < vertex_radius < length/2,width/2
+sqrt_l2pw2 = sqrt(lb2**2+wb2**2)
+lb2r=lb2-vr;wb2r=wb2-vr
+latan = atan((lw_radius+lb2)/(wb2r))*r2d
+watan = atan((lw_radius+wb2)/(lb2r))*r2d
+lwRvr=lw_radius+vr
+lb2rwb2r = sqrt((lb2r)**2+(wb2r)**2)
+thetavr=atan((wb2r)/(lb2r))*r2d
+
+def Circle(angle):
     glPushMatrix()
     glTranslatef(0.0,1,0.0)
     glRotatef(angle,0,0,1)
@@ -24,21 +37,7 @@ def cCircle(angle):
     glEnd()
     glPopMatrix()
 
-def Circle(angle):
-    glColor4f(1,1,1,1)
-    glBegin(GL_LINES)
-    num_triangles = 1000
-    x=0
-    y=1
-    r=1
-    for i in range(num_triangles-6):
-        glVertex2f(x,y)
-        glVertex2f(x+r*cos(angle+i*2*3.14/num_triangles), y+r*sin(angle+i*2*3.14/num_triangles))
-    glEnd()
-
 def Rect(y,angle):
-    length = 2
-    width = 0.4
     glPushMatrix()
     glTranslatef(0.0,y,0.0)
     glRotatef(angle,0,0,1)
@@ -57,18 +56,66 @@ def Rect(y,angle):
     glEnd()
     glPopMatrix()
 
+def rRect(y,angle):
+    glPushMatrix()
+    glTranslatef(0.0,y,0.0)
+    glRotatef(angle,0,0,1)
+
+    glColor4f(1,1,0,1)
+    glBegin(GL_QUADS)
+    glVertex2f(-wb2,-lb2r)
+    glVertex2f(wb2,-lb2r)
+    glVertex2f(wb2,lb2r)
+    glVertex2f(-wb2,lb2r)
+    glEnd()
+
+    glColor4f(1,1,0,1)
+    glBegin(GL_QUADS)
+    glVertex2f(-wb2r,lb2r)
+    glVertex2f(wb2r,lb2r)
+    glVertex2f(wb2r,lb2)
+    glVertex2f(-wb2r,lb2)
+    glEnd()
+    glColor4f(1,1,0,1)
+    glBegin(GL_QUADS)
+    glVertex2f(-wb2r,-lb2)
+    glVertex2f(wb2r,-lb2)
+    glVertex2f(wb2r,-lb2r)
+    glVertex2f(-wb2r,-lb2r)
+    glEnd()
+
+    num_triangles = 1000
+    glBegin(GL_LINES)
+    for i in range(int(num_triangles/2)):
+        glVertex2f(wb2r,lb2r)
+        glVertex2f(wb2r+vr*cos(i*3.14/num_triangles),lb2r+vr*sin(i*3.14/num_triangles))
+    glEnd()
+    glBegin(GL_LINES)
+    for i in range(int(num_triangles/2),num_triangles):
+        glVertex2f(-wb2r,lb2r)
+        glVertex2f(-wb2r+vr*cos(i*3.14/num_triangles),lb2r+vr*sin(i*3.14/num_triangles))
+    glEnd()
+    glBegin(GL_LINES)
+    for i in range(num_triangles,3*int(num_triangles/2)):
+        glVertex2f(-wb2r,-lb2r)
+        glVertex2f(-wb2r+vr*cos(i*3.14/num_triangles),-lb2r+vr*sin(i*3.14/num_triangles))
+    glEnd()
+    glBegin(GL_LINES)
+    for i in range(3*int(num_triangles/2),2*num_triangles):
+        glVertex2f(wb2r,-lb2r)
+        glVertex2f(wb2r+vr*cos(i*3.14/num_triangles),-lb2r+vr*sin(i*3.14/num_triangles))
+    glEnd()
+
+    glColor4f(1,0,0,1)
+    glBegin(GL_LINES)
+    glVertex2f(0.0,0.0)
+    glVertex2f(0.0,lb2)
+    glEnd()
+
+    glPopMatrix()
+
+
 def get_y(angle):
-    d2r=3.14/180;r2d=180/3.14;
-    lw_radius = 1;#Linish Wheel radius
-    length = 2;lb2=length/2;
-    width = 0.4;wb2=width/2;
-    sqrt_l2pw2 = sqrt(lb2**2+wb2**2)
-    vr = .1;#0 < vertex_radius < length/2,width/2
-    latan = atan((lw_radius+lb2)/(wb2-vr))*r2d
-    watan = atan((lw_radius+wb2)/(lb2-vr))*r2d
-    lwRvr=lw_radius+vr
-    lb2rwb2r = sqrt((lb2-vr)**2+(wb2-vr)**2)
-    thetavr=atan((wb2-vr)/(lb2-vr))*r2d
     if (angle > 0 and angle < (90-latan)):
         #print("0<a("+str(angle)+")<"+str(90-latan))
         y = (lw_radius+lb2) / sin((angle+90)*d2r)
@@ -128,14 +175,6 @@ def main():
 
     glMatrixMode(GL_MODELVIEW)
 
-    lw_radius = 1;#Linish Wheel radius
-    length = 2
-    lb2=length/2
-    width = 0.4
-    wb2=width/2
-    latan = atan((lw_radius+lb2)/wb2)*180/3.14
-    watan = atan((lw_radius+wb2)/lb2)*180/3.14
-
     a=0
     while True:
         a=a+1
@@ -148,13 +187,13 @@ def main():
                 quit()
             if (event.type == pygame.KEYDOWN) and (prev_pressed==False):
                 if event.key == pygame.K_DOWN:
-                    glTranslatef(0.0,-0.5,0.0)
-                if event.key == pygame.K_UP:
                     glTranslatef(0.0,0.5,0.0)
+                if event.key == pygame.K_UP:
+                    glTranslatef(0.0,-0.5,0.0)
                 if event.key == pygame.K_LEFT:
-                    glTranslatef(-0.5,0.0,0.0)
-                if event.key == pygame.K_RIGHT:
                     glTranslatef(0.5,0.0,0.0)
+                if event.key == pygame.K_RIGHT:
+                    glTranslatef(-0.5,0.0,0.0)
                 if event.key == pygame.K_KP_MINUS:
                     glTranslatef(0.0,0.0, -0.5)
                 if event.key == pygame.K_KP_PLUS:
@@ -165,9 +204,10 @@ def main():
         #glTranslatef(0.0,0.0, zoom_position)
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        cCircle(a)
+        gear_ratio=30
+        Circle(a*gear_ratio)
         #Circle(a*3.14/180)
-        Rect(get_y(a),a)
+        rRect(get_y(a),a)
         Line()
         pygame.display.flip()
 
@@ -179,7 +219,7 @@ def main():
         #    pygame.time.wait(1000)
         #else:
         #    pygame.time.wait(100)
-        pygame.time.wait(100)
+        pygame.time.wait(10)
 
 
 main()
