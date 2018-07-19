@@ -176,11 +176,14 @@ def main():
     glMatrixMode(GL_MODELVIEW)
 
     a=0
+    forward=True
+    run=True
     while True:
-        a=a+1
-        if a>360:
-            a=a-360
-
+        if run:
+            if forward:
+                a=a+1
+            else:
+                a=a-1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -195,14 +198,27 @@ def main():
                 if event.key == pygame.K_RIGHT:
                     glTranslatef(-0.5,0.0,0.0)
                 if event.key == pygame.K_KP_MINUS:
-                    glTranslatef(0.0,0.0, -0.5)
+                    glTranslatef(0.0,0.0, -50)
                 if event.key == pygame.K_KP_PLUS:
-                    glTranslatef(0.0,0.0, 0.5)
+                    glTranslatef(0.0,0.0, 50)
+                if event.key == pygame.K_r:
+                    forward = not forward
+                if event.key == pygame.K_SPACE:
+                    run = not run
+                if event.key == pygame.K_PAGEUP:
+                    a=a+1
+                if event.key == pygame.K_PAGEDOWN:
+                    a=a-1
                 prev_pressed=True
             else:
                 prev_pressed=False
-        #glTranslatef(0.0,0.0, zoom_position)
 
+
+
+        if a>360:
+            a=a-360
+        elif a<0:
+            a=a+360
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         gear_ratio=30
         Circle(a*gear_ratio)
