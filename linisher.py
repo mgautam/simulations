@@ -7,9 +7,9 @@ from OpenGL.GLU import *
 from math import *
 
 d2r=3.14/180;r2d=180/3.14;
-lw_radius = 120.6;#Linish Wheel radius
-length = 165;lb2=length/2;
-width = 47;wb2=width/2;
+lw_radius = 120;#Linish Wheel radius
+length = 166;lb2=length/2;
+width = 48;wb2=width/2;
 vr = 4;#23.499;#0 < vertex_radius < length/2,width/2
 sqrt_l2pw2 = sqrt(lb2**2+wb2**2)
 lb2r=lb2-vr;wb2r=wb2-vr
@@ -116,41 +116,41 @@ def rRect(y,angle):
 
 
 def get_y(angle):
-    if (angle > 0 and angle < (90-latan)):
+    if (angle >= 0 and angle <= (90-latan)):
         #print("0<a("+str(angle)+")<"+str(90-latan))
         y = (lw_radius+lb2) / sin((angle+90)*d2r)
     elif (angle > (90-latan) and angle < watan):
         #print(str(90-latan)+"<a1("+str(angle)+")<"+str(watan))
         sa = 90*(angle - (90-latan))/(watan-(90-latan))
         y = sqrt(lwRvr**2+lb2rwb2r**2-2*lwRvr*lb2rwb2r*cos((thetavr+90+(90-sa))*d2r))
-    elif (angle > watan and angle < (180 - watan)):
+    elif (angle >= watan and angle <= (180 - watan)):
         #print(str(watan)+"<b("+str(angle)+")<"+str(180-watan))
         y = (lw_radius+wb2) / sin(angle * d2r)
     elif (angle > (180-watan) and angle < (90+latan)):
         #print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
         sa = 90*(angle - (180-watan))/((90+latan)-(180-watan))
         y = sqrt(lwRvr**2+lb2rwb2r**2-2*lwRvr*lb2rwb2r*cos((thetavr+90+sa)*d2r))
-    elif (angle > (90+latan) and angle < (270 - latan)):
+    elif (angle >= (90+latan) and angle <= (270 - latan)):
         #print(str(90+watan)+"<c("+str(angle)+")<"+str(270-latan))
         y = (lw_radius+lb2) / sin((angle-90) * d2r)
     elif (angle > (270-latan) and angle < (180+watan)):
         #print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
         sa = 90*(angle - (270-latan))/((180+watan)-(270-latan))
         y = sqrt(lwRvr**2+lb2rwb2r**2-2*lwRvr*lb2rwb2r*cos((thetavr+90+(90-sa))*d2r))
-    elif (angle > (180+watan) and angle < (360-watan)):#360+wacos
+    elif (angle >= (180+watan) and angle <= (360-watan)):#360+wacos
         #print(str(180+watan)+"<d("+str(angle)+")<"+str(360-watan))
         y = (lw_radius+wb2) / sin((angle-180) * d2r)
     elif (angle > (360-watan) and angle < (270+latan)):#360+wacos
         #print(str(360-watan)+"<d1("+str(angle)+")<"+str(270+latan))
         sa = 90*(angle - (360-watan))/((270+latan)-(360-watan))
         y = sqrt(lwRvr**2+lb2rwb2r**2-2*lwRvr*lb2rwb2r*cos((thetavr+90+sa)*d2r))
-    elif (angle > (270+latan) and angle <= 360):
+    elif (angle >= (270+latan) and angle <= 360):
         #print(str(270+latan)+"<e("+str(angle)+")<360")
         y = (lw_radius+lb2) / sin((angle-270)*d2r)
     else:
-        #print("-")
-        y = sqrt_l2pw2
-    return lw_radius-y
+        print("-")
+        y = lw_radius+sqrt_l2pw2
+    return y
 
 def Line():
     glPushMatrix()
@@ -175,15 +175,16 @@ def main():
 
     glMatrixMode(GL_MODELVIEW)
 
-    a=0
+    step_angle=1.5
+    a=-step_angle
     forward=True
     run=True
     while True:
         if run:
             if forward:
-                a=a+1
+                a=a+step_angle
             else:
-                a=a-1
+                a=a-step_angle
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -206,9 +207,9 @@ def main():
                 if event.key == pygame.K_SPACE:
                     run = not run
                 if event.key == pygame.K_PAGEUP:
-                    a=a+1
+                    a=a+step_angle
                 if event.key == pygame.K_PAGEDOWN:
-                    a=a-1
+                    a=a-step_angle
                 prev_pressed=True
             else:
                 prev_pressed=False
@@ -223,7 +224,9 @@ def main():
         gear_ratio=30
         Circle(a*gear_ratio)
         #Circle(a*3.14/180)
-        rRect(get_y(a),a)
+        ydist=get_y(a)
+        print(str(a-90)+","+str(ydist)+",")
+        rRect(lw_radius-ydist,a)
         Line()
         pygame.display.flip()
 
@@ -235,7 +238,7 @@ def main():
         #    pygame.time.wait(1000)
         #else:
         #    pygame.time.wait(100)
-        pygame.time.wait(10)
+        pygame.time.wait(100)
 
 
 main()
