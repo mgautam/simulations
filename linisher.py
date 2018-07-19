@@ -7,10 +7,10 @@ from OpenGL.GLU import *
 from math import *
 
 d2r=3.14/180;r2d=180/3.14;
-lw_radius = 1;#Linish Wheel radius
-length = 2;lb2=length/2;
-width = 0.4;wb2=width/2;
-vr = .1;#0 < vertex_radius < length/2,width/2
+lw_radius = 120.6;#Linish Wheel radius
+length = 165;lb2=length/2;
+width = 47;wb2=width/2;
+vr = 4;#23.499;#0 < vertex_radius < length/2,width/2
 sqrt_l2pw2 = sqrt(lb2**2+wb2**2)
 lb2r=lb2-vr;wb2r=wb2-vr
 latan = atan((lw_radius+lb2)/(wb2r))*r2d
@@ -21,19 +21,19 @@ thetavr=atan((wb2r)/(lb2r))*r2d
 
 def Circle(angle):
     glPushMatrix()
-    glTranslatef(0.0,1,0.0)
+    glTranslatef(0.0,lw_radius,0.0)
     glRotatef(angle,0,0,1)
     glColor4f(1,1,1,1)
     num_triangles = 1000
     glBegin(GL_LINES)
     for i in range(num_triangles):
         glVertex2f(0,0)
-        glVertex2f(cos(i*2*3.14/num_triangles), sin(i*2*3.14/num_triangles))
+        glVertex2f(lw_radius*cos(i*2*3.14/num_triangles), lw_radius*sin(i*2*3.14/num_triangles))
     glEnd()
     glColor4f(1,0,0,1)
     glBegin(GL_LINES)
     glVertex2f(0.0,0.0)
-    glVertex2f(0.0,1.0)
+    glVertex2f(0.0,lw_radius)
     glEnd()
     glPopMatrix()
 
@@ -158,7 +158,7 @@ def Line():
     glColor3f(0.0, 0.0, 1.0);
     glBegin(GL_LINES);
     glVertex3f(0.0, 0.0, 0.0);
-    glVertex3f(0.0,-3.0, 0);
+    glVertex3f(0.0,-length, 0);
     glEnd();
     glPopMatrix()
 
@@ -167,11 +167,11 @@ def main():
     display = (600,600)
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
 
-    gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
+    gluPerspective(45, (display[0]/display[1]), 0.1, 450.0)
 
     prev_pressed=False
     #zoom_position = -5
-    glTranslatef(0.0,0.0, -5.0)
+    glTranslatef(0.0,0.0, -450.0)
 
     glMatrixMode(GL_MODELVIEW)
 
