@@ -11,6 +11,7 @@ lw_radius = 120;#Linish Wheel radius
 length = 166;
 width = 48;
 vr = 4;#23.499;#0 < vertex_radius < length/2,width/2
+comp_angle=15;#compensation_angle
 
 # Calculated parameters
 d2r=3.14/180;r2d=180/3.14;
@@ -22,6 +23,9 @@ watan = atan((lw_radius+wb2)/(lb2r))*r2d
 lwRvr=lw_radius+vr
 lb2rwb2r = sqrt((lb2r)**2+(wb2r)**2)
 thetavr=atan((wb2r)/(lb2r))*r2d
+print("Max Compensation angle="+str(atan(wb2/lb2r)*r2d))
+lemeet=wb2-lb2r*tan(comp_angle*d2r);#long edges meeting at mid-point
+lemecos=lemeet*cos(comp_angle*d2r);
 
 def get_y(angle):
     if (angle >= 0 and angle <= (90-latan)):
@@ -31,9 +35,18 @@ def get_y(angle):
         #print(str(90-latan)+"<a1("+str(angle)+")<"+str(watan))
         sa = angle - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
-    elif (angle >= watan and angle <= (180 - watan)):
-        #print(str(watan)+"<b("+str(angle)+")<"+str(180-watan))
-        y = (lw_radius+wb2) / sin(angle * d2r)
+    elif (angle >= watan and angle < 90):
+        #print(str(watan)+"<b-("+str(angle)+")<"+str(180-watan))
+        sa = angle - comp_angle
+        #y = lw_radius / sin(sa * d2r) + lemeet
+        y = (lw_radius+lemecos) / sin(sa * d2r)
+        #print(y)
+    elif (angle >= 90 and angle <= (180 - watan)):
+        #print(str(watan)+"<b+("+str(angle)+")<"+str(180-watan))
+        sa = 180-angle - comp_angle
+        #y = lw_radius / sin(sa * d2r) + lemeet
+        y = (lw_radius+lemecos) / sin(sa * d2r)
+        #print(y)
     elif (angle > (180-watan) and angle < (90+latan)):
         #print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
         sa = 180-angle - thetavr
@@ -45,9 +58,16 @@ def get_y(angle):
         #print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
         sa = angle-180 - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
-    elif (angle >= (180+watan) and angle <= (360-watan)):#360+wacos
-        #print(str(180+watan)+"<d("+str(angle)+")<"+str(360-watan))
-        y = (lw_radius+wb2) / sin((angle-180) * d2r)
+    elif (angle >= (180+watan) and angle < 270):#360+wacos
+        #print(str(180+watan)+"<d-("+str(angle)+")<"+str(360-watan))
+        sa = angle-180 - comp_angle
+        #y = lw_radius / sin(sa * d2r) + lemeet
+        y = (lw_radius+lemecos) / sin(sa * d2r)
+    elif (angle >= 270 and angle <= (360-watan)):#360+wacos
+        #print(str(180+watan)+"<d+("+str(angle)+")<"+str(360-watan))
+        sa = 360-angle - comp_angle
+        #y = lw_radius / sin(sa * d2r) + lemeet
+        y = (lw_radius+lemecos) / sin(sa * d2r)
     elif (angle > (360-watan) and angle < (270+latan)):#360+wacos
         #print(str(360-watan)+"<d1("+str(angle)+")<"+str(270+latan))
         sa = 360-angle - thetavr
@@ -137,6 +157,13 @@ def rRect(y,angle):
     glBegin(GL_QUADS)
     glVertex2f(-wb2,-lb2r)
     glVertex2f(wb2,-lb2r)
+    glVertex2f(lemeet,0)
+    glVertex2f(-lemeet,0)
+    glEnd()
+    glColor4f(1,1,0,1)
+    glBegin(GL_QUADS)
+    glVertex2f(-lemeet,0)
+    glVertex2f(lemeet,0)
     glVertex2f(wb2,lb2r)
     glVertex2f(-wb2,lb2r)
     glEnd()
@@ -254,10 +281,9 @@ def main():
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         gear_ratio=30
         Circle(a*gear_ratio)
-        #Circle(a*3.14/180)
         ydist=get_y(a)
         if a!=prev_a:
-            print_y(a,ydist)
+            #print_y(a,ydist)
             prev_a = a
         rRect(lw_radius-ydist,a)
         Line()
