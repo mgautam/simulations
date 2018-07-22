@@ -29,8 +29,8 @@ lemecos=lemeet*cos(comp_angle*d2r);
 
 def get_y(angle):
     if (angle >= 0 and angle <= (90-latan)):
-        #print("0<a("+str(angle)+")<"+str(90-latan))
-        y = (lw_radius+lb2) / sin((angle+90)*d2r)
+        #print("0<a-("+str(angle)+")<"+str(90-latan))
+        y = (lw_radius+lb2) / cos(angle*d2r)
     elif (angle > (90-latan) and angle < watan):
         #print(str(90-latan)+"<a1("+str(angle)+")<"+str(watan))
         sa = angle - thetavr
@@ -47,9 +47,12 @@ def get_y(angle):
         #print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
         sa = 180-angle - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
-    elif (angle >= (90+latan) and angle <= (270 - latan)):
-        #print(str(90+latan)+"<c("+str(angle)+")<"+str(270-latan))
-        y = (lw_radius+lb2) / sin((angle-90) * d2r)
+    elif (angle >= (90+latan) and angle < 180):
+        #print(str(90+latan)+"<c-("+str(angle)+")<"+str(180))
+        y = (lw_radius+lb2) / cos((180-angle) * d2r)
+    elif (angle >= 180 and angle <= (270 - latan)):
+        #print(str(180)+"<c+("+str(angle)+")<"+str(270-latan))
+        y = (lw_radius+lb2) / cos((angle-180) * d2r)
     elif (angle > (270-latan) and angle < (180+watan)):
         #print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
         sa = angle-180 - thetavr
@@ -67,8 +70,8 @@ def get_y(angle):
         sa = 360-angle - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
     elif (angle >= (270+latan) and angle <= 360):
-        #print(str(270+latan)+"<e("+str(angle)+")<360")
-        y = (lw_radius+lb2) / sin((angle-270)*d2r)
+        #print(str(270+latan)+"<a+("+str(angle)+")<360")
+        y = (lw_radius+lb2) / cos((360-angle)*d2r)
     else:
         print("-")
         y = lw_radius+sqrt_l2pw2
@@ -76,7 +79,7 @@ def get_y(angle):
 
 def print_y(angle, ydist):
     '''if (angle >= 0 and angle <= (90-latan)):
-        print("0<a("+str(angle)+")<"+str(90-latan))
+        print("0<a-("+str(angle)+")<"+str(90-latan))
     elif (angle > (90-latan) and angle < watan):
         print(str(90-latan)+"<a1("+str(angle)+")<"+str(watan))
     elif (angle >= watan and angle < 90):
@@ -85,8 +88,10 @@ def print_y(angle, ydist):
         print(str(90)+"<b+("+str(angle)+")<"+str(180-watan))
     elif (angle > (180-watan) and angle < (90+latan)):
         print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
-    elif (angle >= (90+latan) and angle <= (270 - latan)):
-        print(str(90+latan)+"<c("+str(angle)+")<"+str(270-latan))
+    elif (angle >= (90+latan) and angle < 180):
+        print(str(90+latan)+"<c-("+str(angle)+")<"+str(180))
+    elif (angle >= 180 and angle <= (270 - latan)):
+        print(str(180)+"<c+("+str(angle)+")<"+str(270-latan))
     elif (angle > (270-latan) and angle < (180+watan)):
         print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
     elif (angle >= (180+watan) and angle < 270):
@@ -96,7 +101,7 @@ def print_y(angle, ydist):
     elif (angle > (360-watan) and angle < (270+latan)):
         print(str(360-watan)+"<d1("+str(angle)+")<"+str(270+latan))
     elif (angle >= (270+latan) and angle <= 360):
-        print(str(270+latan)+"<e("+str(angle)+")<360")
+        print(str(270+latan)+"<a+("+str(angle)+")<360")
     else:
         print("-")'''
     print(str(angle)+","+str(ydist)+",")
@@ -222,17 +227,18 @@ def Line():
     glPopMatrix()
 
 def main():
-    print("0<a<"+str(90-latan))
+    print("0<a-<"+str(90-latan))
     print(str(90-latan)+"<a1<"+str(watan))
     print(str(watan)+"<b-<90")
     print("90<b+<"+str(180-watan))
     print(str(180-watan)+"<b1<"+str(90+latan))
-    print(str(90+latan)+"<c<"+str(270-latan))
+    print(str(90+latan)+"<c-<"+str(180))
+    print(str(180)+"<c+<"+str(270-latan))
     print(str(270-latan)+"<c1<"+str(180+watan))
     print(str(180+watan)+"<d-<270")
     print("270<d+<"+str(360-watan))
     print(str(360-watan)+"<d1<"+str(270+latan))
-    print(str(270+latan)+"<e<360")
+    print(str(270+latan)+"<a+<360")
 
     pygame.init()
     display = (600,600)
