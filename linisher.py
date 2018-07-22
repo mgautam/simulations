@@ -11,7 +11,7 @@ lw_radius = 120;#Linish Wheel radius
 length = 166;
 width = 48;
 vr = 4;#23.499;#0 < vertex_radius < length/2,width/2
-comp_angle=15;#compensation_angle
+comp_angle=0;#15;#compensation_angle
 
 # Calculated parameters
 d2r=3.14/180;r2d=180/3.14;
@@ -36,39 +36,33 @@ def get_y(angle):
         sa = angle - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
     elif (angle >= watan and angle < 90):
-        #print(str(watan)+"<b-("+str(angle)+")<"+str(180-watan))
+        #print(str(watan)+"<b-("+str(angle)+")<"+str(90))
         sa = angle - comp_angle
-        #y = lw_radius / sin(sa * d2r) + lemeet
         y = (lw_radius+lemecos) / sin(sa * d2r)
-        #print(y)
     elif (angle >= 90 and angle <= (180 - watan)):
-        #print(str(watan)+"<b+("+str(angle)+")<"+str(180-watan))
+        #print(str(90)+"<b+("+str(angle)+")<"+str(180-watan))
         sa = 180-angle - comp_angle
-        #y = lw_radius / sin(sa * d2r) + lemeet
         y = (lw_radius+lemecos) / sin(sa * d2r)
-        #print(y)
     elif (angle > (180-watan) and angle < (90+latan)):
         #print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
         sa = 180-angle - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
     elif (angle >= (90+latan) and angle <= (270 - latan)):
-        #print(str(90+watan)+"<c("+str(angle)+")<"+str(270-latan))
+        #print(str(90+latan)+"<c("+str(angle)+")<"+str(270-latan))
         y = (lw_radius+lb2) / sin((angle-90) * d2r)
     elif (angle > (270-latan) and angle < (180+watan)):
         #print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
         sa = angle-180 - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
-    elif (angle >= (180+watan) and angle < 270):#360+wacos
-        #print(str(180+watan)+"<d-("+str(angle)+")<"+str(360-watan))
+    elif (angle >= (180+watan) and angle < 270):
+        #print(str(180+watan)+"<d-("+str(angle)+")<"+str(270))
         sa = angle-180 - comp_angle
-        #y = lw_radius / sin(sa * d2r) + lemeet
         y = (lw_radius+lemecos) / sin(sa * d2r)
-    elif (angle >= 270 and angle <= (360-watan)):#360+wacos
-        #print(str(180+watan)+"<d+("+str(angle)+")<"+str(360-watan))
+    elif (angle >= 270 and angle <= (360-watan)):
+        #print(str(270)+"<d+("+str(angle)+")<"+str(360-watan))
         sa = 360-angle - comp_angle
-        #y = lw_radius / sin(sa * d2r) + lemeet
         y = (lw_radius+lemecos) / sin(sa * d2r)
-    elif (angle > (360-watan) and angle < (270+latan)):#360+wacos
+    elif (angle > (360-watan) and angle < (270+latan)):
         #print(str(360-watan)+"<d1("+str(angle)+")<"+str(270+latan))
         sa = 360-angle - thetavr
         y = lb2rwb2r*cos(sa*d2r)+sqrt(lwRvr**2 - (lb2rwb2r*sin(sa*d2r))**2)
@@ -81,26 +75,30 @@ def get_y(angle):
     return y
 
 def print_y(angle, ydist):
-    if (angle >= 0 and angle <= (90-latan)):
+    '''if (angle >= 0 and angle <= (90-latan)):
         print("0<a("+str(angle)+")<"+str(90-latan))
     elif (angle > (90-latan) and angle < watan):
         print(str(90-latan)+"<a1("+str(angle)+")<"+str(watan))
-    elif (angle >= watan and angle <= (180 - watan)):
-        print(str(watan)+"<b("+str(angle)+")<"+str(180-watan))
+    elif (angle >= watan and angle < 90):
+        print(str(watan)+"<b-("+str(angle)+")<"+str(90))
+    elif (angle >= 90 and angle <= (180 - watan)):
+        print(str(90)+"<b+("+str(angle)+")<"+str(180-watan))
     elif (angle > (180-watan) and angle < (90+latan)):
         print(str(180-watan)+"<b1("+str(angle)+")<"+str(90+latan))
     elif (angle >= (90+latan) and angle <= (270 - latan)):
-        print(str(90+watan)+"<c("+str(angle)+")<"+str(270-latan))
+        print(str(90+latan)+"<c("+str(angle)+")<"+str(270-latan))
     elif (angle > (270-latan) and angle < (180+watan)):
         print(str(270-latan)+"<c1("+str(angle)+")<"+str(180+watan))
-    elif (angle >= (180+watan) and angle <= (360-watan)):#360+wacos
-        print(str(180+watan)+"<d("+str(angle)+")<"+str(360-watan))
-    elif (angle > (360-watan) and angle < (270+latan)):#360+wacos
+    elif (angle >= (180+watan) and angle < 270):
+        print(str(180+watan)+"<d-("+str(angle)+")<"+str(270))
+    elif (angle >= 270 and angle <= (360-watan)):
+        print(str(270)+"<d+("+str(angle)+")<"+str(360-watan))
+    elif (angle > (360-watan) and angle < (270+latan)):
         print(str(360-watan)+"<d1("+str(angle)+")<"+str(270+latan))
     elif (angle >= (270+latan) and angle <= 360):
         print(str(270+latan)+"<e("+str(angle)+")<360")
     else:
-        print("-")
+        print("-")'''
     print(str(angle)+","+str(ydist)+",")
 
 
@@ -109,13 +107,13 @@ def Circle(angle):
     glTranslatef(0.0,lw_radius,0.0)
     glRotatef(angle,0,0,1)
     num_triangles = 1000
-    glColor3f(0.0, 0.0, 1.0);
-    glBegin(GL_LINES)
-    for i in range(num_triangles):
-        glVertex2f(0,0)
-        glVertex2f((lw_radius+0.3)*cos(i*2*3.14/num_triangles), (lw_radius+0.3)*sin(i*2*3.14/num_triangles))
-    glEnd()
-    glColor4f(1,1,1,1)
+    #glColor3f(0.0, 0.0, 1.0);
+    #glBegin(GL_LINES)
+    #for i in range(num_triangles):
+    #    glVertex2f(0,0)
+    #    glVertex2f((lw_radius+0.3)*cos(i*2*3.14/num_triangles), (lw_radius+0.3)*sin(i*2*3.14/num_triangles))
+    #glEnd()
+    glColor4f(1,0,1,1)
     glBegin(GL_LINES)
     for i in range(num_triangles):
         glVertex2f(0,0)
@@ -224,6 +222,18 @@ def Line():
     glPopMatrix()
 
 def main():
+    print("0<a<"+str(90-latan))
+    print(str(90-latan)+"<a1<"+str(watan))
+    print(str(watan)+"<b-<90")
+    print("90<b+<"+str(180-watan))
+    print(str(180-watan)+"<b1<"+str(90+latan))
+    print(str(90+latan)+"<c<"+str(270-latan))
+    print(str(270-latan)+"<c1<"+str(180+watan))
+    print(str(180+watan)+"<d-<270")
+    print("270<d+<"+str(360-watan))
+    print(str(360-watan)+"<d1<"+str(270+latan))
+    print(str(270+latan)+"<e<360")
+
     pygame.init()
     display = (600,600)
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
@@ -279,17 +289,18 @@ def main():
         elif a<0:
             a=a+360
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        gear_ratio=30
-        Circle(a*gear_ratio)
         ydist=get_y(a)
         if a!=prev_a:
-            #print_y(a,ydist)
+            print_y(a,ydist)
             prev_a = a
         rRect(lw_radius-ydist,a)
+        gear_ratio=30
+        Circle(a*gear_ratio)
         Line()
         pygame.display.flip()
 
         pygame.time.wait(10)
-
+        if a==360:
+            break
 
 main()
