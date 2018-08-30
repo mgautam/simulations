@@ -22,14 +22,19 @@ for postcode in postcodes:
         value_lists.append(value_list)
     value_sheets.append(value_lists)
 
-title_lists=[]
+title_list=[]
 for i in range(len(sheets)):
     ws = wb[sheets[i]]
-    title_list = [ws.cell(row=r,column=1).value for r in range(firstrows[i],lastrows[i]+1)]
-    title_list.insert(0,'PostCode')
-    title_lists.append(title_list)
+    title_list.append(ws.cell(row=4,column=1).value)
 
-print(title_lists)
+category_lists=[]
+for i in range(len(sheets)):
+    ws = wb[sheets[i]]
+    category_list = [ws.cell(row=r,column=1).value for r in range(firstrows[i],lastrows[i]+1)]
+    category_list.insert(0,'PostCode')
+    category_lists.append(category_list)
+
+print(category_lists)
 print(value_sheets)
 
 
@@ -39,15 +44,16 @@ wb = Workbook()
 
 
 '''for i in range(len(sheets)):
-    wsw = wb.create_sheet(title=sheets[i])
-    wsw.append(title_lists[i])
+    wsw = wb.create_sheet(category=sheets[i])
+    wsw.append(category_lists[i])
     for c in range(len(postcodes)):
         wsw.append(value_sheets[c][i])'''
 
 for i in range(len(sheets)):
     wsw = wb.create_sheet(title=sheets[i])
+    wsw.cell(row=1,column=1).value=title_list[i]
     for r in range(firstrows[i],lastrows[i]+2):
-        wsw.cell(row=r-firstrows[i]+1,column=1).value=title_lists[i][r-firstrows[i]]
+        wsw.cell(row=r-firstrows[i]+2,column=1).value=category_lists[i][r-firstrows[i]]
 
 for c in range(len(postcodes)):
     #print(postcodes[c])
@@ -56,7 +62,7 @@ for c in range(len(postcodes)):
         for r in range(firstrows[i],lastrows[i]+2):
             #print(r,",",c)
             #print(value_sheets[c][i][r-firstrow])
-            wsw.cell(row=r-firstrows[i]+1,column=c+2).value=value_sheets[c][i][r-firstrows[i]]
+            wsw.cell(row=r-firstrows[i]+2,column=c+2).value=value_sheets[c][i][r-firstrows[i]]
 
 #save the file
 wb.save('compilation.xlsx')
