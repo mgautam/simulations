@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 #Variables
 postcodes=[3087,3141,30873,3178,3175,3138,3977]
 sheets=['G 08', 'G 29','G 53']
+sheet_parse=['c','c','r'];#total values in one - 'c':column, 'r':row
 totalcols=[7,4,11]
 firstrows = [11,11,14]
 lastrows = [42,29,33]
@@ -22,7 +23,7 @@ num_pcodes=len(postcodes)
 num_sheets=len(sheets)
 num_categories=[]
 for s in range(num_sheets):
-    if sheets[s] == 'G 53':
+    if sheet_parse[s] == 'r':
         num_categories.append(lastcols[s]-firstcols[s])
     else:
         num_categories.append(lastrows[s]-firstrows[s])
@@ -37,7 +38,7 @@ for postcode in postcodes:
     value_lists=[]
     for s in range(num_sheets):
         ws = wb[sheets[s]]
-        if sheets[s] == 'G 53':
+        if sheet_parse[s] == 'r':
             value_list = [ws.cell(row=totalrows[s],column=c).value for c in range(firstcols[s],lastcols[s]+1)]
         else:
             value_list = [ws.cell(row=r,column=totalcols[s]).value for r in range(firstrows[s],lastrows[s]+1)]
@@ -53,7 +54,7 @@ for s in range(num_sheets):
 category_lists=[]
 for s in range(num_sheets):
     ws = wb[sheets[s]]
-    if sheets[s] == 'G 53':
+    if sheet_parse[s] == 'r':
         category_list = [ws.cell(row=catrow[s],column=c).value for c in range(firstcols[s],lastcols[s]+1)]
     else:
         category_list = [ws.cell(row=r,column=1).value for r in range(firstrows[s],lastrows[s]+1)]
