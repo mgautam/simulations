@@ -11,6 +11,7 @@
 #define LOOP_PERIOD 1e7 //Expressed in ticks
 //RTIME period = 1000000000;
 RT_TASK loop_task;
+cpu_set_t cpus;
 
 void loop_task_proc(void *arg)
 {
@@ -58,6 +59,15 @@ int main(int argc, char **argv)
   //Create the real time task
   sprintf(str, "cyclic_task");
   rt_task_create(&loop_task, str, 0, 99, 0);
+
+  /* Set cpu affinity;
+     Edit /etc/default/grub to change the line:
+        GRUB_CMDLINE_LINUX="isolcpus=6,7"
+     then run update-grub
+  */
+  CPU_ZERO(&cpus);
+  CPU_SET(7,&cpus);
+  rt_task_set_affinity(&loop_task, &cpus);
 
   //Since task starts in suspended mode, start task
   rt_task_start(&loop_task, &loop_task_proc, 0);
