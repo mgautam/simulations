@@ -14,7 +14,7 @@ firstcols=[0,0,2]
 lastcols=[0,0,10]
 
 #Fixed parameters
-prepend='GCP_POA'
+prepend='abs/GCP_POA'
 ext='.xlsx'
 
 #files=[prepend+str(postcode)+ext for postcode in postcodes]
